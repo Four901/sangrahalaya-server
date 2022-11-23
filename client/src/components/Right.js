@@ -20,7 +20,7 @@ const Right = (props) => {
   }
     const [tempListItems,setTempListItems]=useState([]);
 
-    const [user,SetUser]=useState({Address:"",Department:"",NoOfIssues:0,NoOfMrns:  0,Region: ""})
+    const [user,SetUser]=useState({Address:"",Department:"",Location:"",NoOfIssues:0,NoOfMrns:  0,Region: ""})
   const getuser=async()=>{
     //console.log("getting ornot")
     
@@ -126,12 +126,12 @@ const Right = (props) => {
         <img src={image} alt={'iocl'} style={{height:'70px',width:'70px',marginLeft:'10px',marginTop:'10px'}} />
     
             <h1 className='mx-5 my-4'><b>INDIAN OIL CORPORATION LTD.</b></h1></div>
-        <div style={{marginLeft:'200px',marginTop:'10px',width:'350px'}}>
+        <div style={{marginLeft:'250px',marginTop:'10px',width:'350px'}}>
         <h4>{user.Address}</h4>
         </div>
         <div style={{display:'flex'}}>
         <div style={{marginLeft:'50px',fontSize:'15px'}}>
-        Requisition No. : {user.NoOfIssues}
+        Requisition No. : {user.Location+"/"+user.NoOfIssues}
         </div>
         <div style={{marginLeft:'350px',fontSize:'15px'}}>
                  Date : {date}

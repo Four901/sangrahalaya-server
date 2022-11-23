@@ -233,7 +233,7 @@ useEffect(() => {
                <b>NO.</b> 
             </div>
         </div>
-        <div style={{fontSize:'15px',marginLeft:'30px',marginTop:'5px'}}><b>ALLahbaad/BP/{user.NoOfMrns}</b></div>
+        <div style={{fontSize:'15px',marginLeft:'30px',marginTop:'5px'}}><b>{user.Location+"/"+user.NoOfMrns}</b></div>
         </div>
         
     </td>
