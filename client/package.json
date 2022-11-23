@@ -1,5 +1,5 @@
 {
-  "name": "barcodeinventory-frontend",
+  "name": "client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,7 +16,6 @@
     "jsonwebtoken": "^8.5.1",
     "onscan.js": "^1.5.2",
     "os-browserify": "^0.3.0",
-    "quagga": "^0.12.1",
     "react": "^18.2.0",
     "react-barcode": "^1.4.5",
     "react-barcode-reader": "^0.0.2",
@@ -36,7 +35,7 @@
   "engines": {
     "node": "16.13.1",
     "npm": "8.1.2"
-    },
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
