@@ -18,7 +18,7 @@ app.use(express.json())
 
 
 
-
+const port =process.env.PORT||5000
 
 //routes
 
@@ -32,18 +32,12 @@ app.use('/api/items',require('./routes/ItemsDetails'))
 
 
 
-const port =process.env.PORT||5000
 
-// for deployment
-if(process.env.NODE_ENV === "production"){
-  app.use(express.static("client/build"))
-}
-else
-{
-  app.get('/', (req, res) => {
-    res.send('Hello BhaiLog!')
-  })
-}
+
+
+app.get('/', (req, res) => {
+  res.send('Hello BhaiLog!')
+})
 app.listen(port, () => {
   console.log(`Bhaii spardha listening on port ${port}`)
 })
