@@ -15,6 +15,7 @@ const { body, validationResult } = require('express-validator');
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 const JWT_KEY=process.env.jwt_key
+//const JWT_KEY="youknowwhoiam?iamashishmeena85185718420600517651"
 const fetchUser=require('../middleware/fetchUser')
 
 
@@ -90,7 +91,8 @@ const errors = validationResult(req);
 router.post('/loginuser',[
   body('Code',"Please Enter the Code").isLength({ min: 3 }),
   // password must be at least 5 chars long
-  body('Password',"Password can not be blank").exists(),
+  body('userId',"Please Enter the userId").isLength({ min: 3 }),
+  body('userPassword',"Password can not be blank").exists(),
 ],async (req,res)=>{
   let Success=false
 /*//console.log(req.body)
@@ -102,38 +104,60 @@ const errors = validationResult(req);
     return res.status(400).json({Success, errors: errors.array() });
   }
   //so from the user schema we have removed info about which one to make indexes , now we need to do a operation to check whether the user with current mail exits or not 
-  const {Code,Password}=req.body;
+  const {Code,userId,userPassword}=req.body;
   try{
-      //console.log(req.body)
+      console.log(req.body)
     let user=await User.findOne({Code:req.body.Code});
+   // console.log(user)
     if(!user)
     {
        return res.status(400).json({Success,error:"Enter The Correct Credentials with code"});
     }
-    
-    var passwordCompare=await bcrypt.compare(Password,user.Password);
+     //console.log(user)
+
+     var locusers=user.LocUsers
+      
+     console.log(locusers)
+     for(let i=0;i<locusers.length;i++)
+     {
+      console.log(locusers[i].empNo+" "+req.body.userId)
+       if(parseInt(locusers[i].empNo)===parseInt(req.body.userId))
+       {
+        console.log("inside")
+    var passwordCompare=await bcrypt.compare(userPassword,locusers[i].LocUserPassword);
     
     //console.log(Password)
     //console.log(user.Password)
     //console.log(passwordCompare)
+
     if(!passwordCompare)
     {
       return res.status(400).json({Success,error:"Enter The Correct Credentials with pass"});
     }
-
+    console.log("inside2")
     var data={
       user:{
         id:user.id
       }
     }
+    console.log(JWT_KEY)
+    console.log(passwordCompare)
     var AuthToken=jwt.sign(data,JWT_KEY);//over here we are signing the jwtauth token which is containing the id of the user
-    //console.log(AuthToken)
+    console.log(AuthToken)
     Success=true
-    res.json({Success,AuthToken})
+    var obj={
+      name:locusers[i].Name,
+      empNo:locusers[i].empNo,
+      isAdmin:locusers[i].isAdmin
+    }
+    res.json({Success,AuthToken,obj})
     /*var decoded = jwt.verify(AuthToken, JWT_KEY);
 //console.log(decoded)*/
     //.then(user => res.json(user))
     //.catch(errors,res.json({"msg":"Please enter a valid mail"}));
+   break
+  }
+}
   }catch(error){
     //console.error(error.message)
     res.status(500).send({Success,error:"Internal Server Error"})
@@ -212,8 +236,10 @@ router.delete('/deleteuser',fetchUser,async (req,res)=>{
 
 router.post('/updateuser',[
   body('Code','Enter a valid name').isLength({ min: 3 }),
-  body('Address','Enter a valid mail').isLength({min:5}),
-  body('Type','Enter the type').isLength({ min: 3 })
+  body('Password','Enter the password').isLength({min:5}),
+  body('userName','Enter the Name').isLength({ min: 3 }),
+  body('userId','Enter the userId').isLength({ min: 3 }),
+  body('userPassword','Enter the Password').isLength({ min: 8 })
  
 ],async (req,res)=>{
   let Success=false
@@ -229,31 +255,68 @@ const errors = validationResult(req);
     }
     //so from the user schema we have removed info about which one to make indexes , now we need to do a operation to check whether the user with current mail exits or not 
     try{
-      //console.log("here i am "+req.body.Code);
+      console.log("here i am "+req.body.Code);
       let user1=await User.findOne({Code:req.body.Code});
       //console.log(req.body.Type)
       if(!user1)
       {
-         return res.status(400).json({Success,error:"User with the emp no does not exists"});
+         return res.status(400).json({Success,error:"User with the code does not exists"});
       }
      
+      var passwordCompare=await bcrypt.compare(req.body.Password,user1.Password);
+    
+      //console.log(Password)
+      //console.log(user.Password)
+      console.log(passwordCompare)
+  
+      if(!passwordCompare)
+      {
+        return res.status(400).json({Success,error:"Enter The Correct Credentials with pass"});
+      }
+      
+     
+      const user2= await User.findOne({Code:req.body.Code})
+     
+      var locusers=user2.LocUsers
+      
+      for(let i=0;i<locusers.length;i++)
+      {
+        if(locusers[i].empNo===req.body.userId)
+        {
+          return res.status(400).json({Success,error:"User Already Exists"});
+        }
+      }
+     
+      const salt=await bcrypt.genSalt(10);
+      const secPass= await bcrypt.hash(req.body.userPassword,salt);
 
-     
-     
-     
+      var obj={
+        empNo:req.body.userId,
+        Name:req.body.userName,
+        isAdmin:false,
+        LocUserPassword:secPass
+      }
+      console.log("here i am "+req.body.Code);
+      console.log(user2);
+      locusers.push(obj)
+      console.log("here i am "+req.body.Code);
+      console.log(user2);
+  console.log("After Updating")
+       console.log(locusers)
    
       const user= await User.findOne({Code:req.body.Code}).updateOne({
       Code: req.body.Code,
       Region:req.body.Region,
       Department:req.body.Department,
       Location:req.body.Location,
-      Address:req.body.Address
+      Address:req.body.Address,
+      LocUsers:locusers
       })
       //console.log(req.body)
       //console.log(user)
       
       let Success=true
-      res.json({Success,user})
+      res.json({Success})
     /*  var AuthToken=jwt.sign(data,JWT_KEY);
       //console.log(AuthToken)
       res.json(AuthToken)

@@ -82,8 +82,8 @@ router.post('/addinventory',fetchUser,[
     }
 
     try{
-        //console.log("backenmd")
-       //console.log(req.body)
+        console.log("backenmd")
+       console.log(req.body)
       const inventory=new Inventory({
         barCode:req.body.barCode,
         user:req.user.id,
@@ -91,6 +91,8 @@ router.post('/addinventory',fetchUser,[
         storeAddress:req.body.storeAddress,
         supplierNameAndAddress:req.body.supplierNameAndAddress,
         issuedBy:req.body.issuedBy,
+        poNumber:req.body.PONumber,
+        poDate:req.body.PODate,
         date:req.body.date,
         No:req.body.No
       })

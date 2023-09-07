@@ -193,8 +193,12 @@ router.put('/updateitem',fetchUser,[
           return res.status(400).json({ errors: errors.array() });
         }
         try{
-           //console.log("req at update")
-           //console.log(req.body)
+           console.log("req at update")
+           console.log(req.body)
+           if(req.body.isAdmin=='false')
+           {
+            return res.status(404).send("Not Allowed")
+           }
         let item=await Items.findOne({description:req.body.Description})
        
       // var filterData = data.filter(item => item.description.includes(search));
@@ -204,8 +208,10 @@ router.put('/updateitem',fetchUser,[
        let arr=item.reports;
      
        const newItem={}
-       const newrep={curdate:req.body.reports.curdate,number:req.body.reports.number,type:req.body.reports.type,remains:req.body.reports.number+item.inInventory};
+       const newrep={curdate:req.body.reports.curdate,number:req.body.reports.number,type:req.body.reports.type,remains:req.body.reports.number+item.inInventory,supplierName:req.body.reports.supplierName,
+    issuedTo:req.body.reports.remark,userid:req.body.reports.userId};
       newItem.inInventory=newrep.remains
+     
        if(req.body.reports){
        
         arr.push(newrep)
@@ -219,8 +225,8 @@ router.put('/updateitem',fetchUser,[
       if(newItem.description===null)newItem.description=item.description
        if(newItem.barCode===null)newItem.barCode=item.barCode
        if(newItem.reports===null)newItem.reports=item.reports
-     
        if(newItem.user===null)newItem.user=item.user
+
        //console.log("ohk")
        //console.log(newItem)
        item=await Items.findOne({description:req.body.Description}).updateOne(newItem)

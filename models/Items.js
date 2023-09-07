@@ -30,9 +30,20 @@ const ItemsSchema=new Schema({
         type:String
     },
     reports:[{
+        userid:{
+            type:Number,
+            default:'3130'
+        },
         curdate:{
             type:String
         },
+        supplierName:{
+            type:String
+        },
+        issuedTo:{
+            type:String
+        }
+        ,
         number:{
             type:Number,
             default:0

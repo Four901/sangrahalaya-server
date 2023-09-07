@@ -128,7 +128,7 @@ router.get('/getcurrentshow',fetchUser,async (req,res)=>{
         
        
         const inverntories=await CurrentlyScanned.find();
-        
+        console.log(inverntories)
         if(!inverntories.length)
         {
             return res.status(404).send("No record found")
@@ -140,13 +140,14 @@ router.get('/getcurrentshow',fetchUser,async (req,res)=>{
             //console.log("current ")
             //console.log(currentinventory[0].barCode)
      
-            
+            console.log(req.user)
             let inventory=await Inventory.find({user:req.user.id,barCode:currentinventory[0].barCode})
          
-            
+            console.log(req.user)
+            console.log(currentinventory[0].barCode)
         
             res.json({inventory})
-
+            console.log(inventory)
 
 
         }

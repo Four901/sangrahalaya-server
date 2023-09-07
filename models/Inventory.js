@@ -47,7 +47,8 @@ const InventorySchema=new Schema({
         type:String
     },
    issuedBy:{
-     type:String
+     type:String,
+     require
    },
     date:{
         type:String
@@ -62,7 +63,12 @@ const InventorySchema=new Schema({
         type:String,
         require:true
     },
-   
+   poNumber:{
+    type:Number
+   },
+   poDate:{
+    type:Date
+   },
     storeAddress:{
         type:String
     }

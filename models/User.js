@@ -23,10 +23,15 @@ const UserSchema=new Schema({
     Location:{
         type:String
     },
-    empNo:{
-        type:String,
-        
-    },
+    LocUsers :
+    [
+    {
+     empNo:{type:Number,unique:true},
+     Name:{type:String},
+     isAdmin:{type:Boolean},
+     LocUserPassword:{type:String}
+    }
+    ],
     userName:{
         type:String,
        
